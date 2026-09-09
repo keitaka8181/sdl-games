@@ -34,4 +34,4 @@ gcc bullethell.c -DUSE_MIXER -IC:/msys64/mingw64/include/SDL2 -LC:/msys64/mingw6
 
 ## ライセンス
 
-MIT を予定
+未定
