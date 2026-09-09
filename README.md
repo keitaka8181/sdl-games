@@ -31,7 +31,3 @@ gcc bullethell.c -DUSE_MIXER -IC:/msys64/mingw64/include/SDL2 -LC:/msys64/mingw6
 `SDL2.dll`（および音声ありの場合は `SDL2_mixer.dll`）を生成した `.exe` と同じフォルダに置く必要がある。
 
 `.vscode/tasks.json` には `main.c` をビルドするタスクが定義されているが、実際のソースファイル名は `breakout.c` / `bullethell.c` なので、VSCode のビルドタスクをそのまま使う場合はファイル名を合わせるかタスク側を書き換える必要がある。
-
-## ライセンス
-
-未定
