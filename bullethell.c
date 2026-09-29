@@ -1,12 +1,15 @@
-// main.c -- Bullet Hell mini demo (C, SDL2) with quadtree & object pooling
-// Optional audio: compile with -DUSE_MIXER and link -lSDL2_mixer
+// bullethell.c -- Bullet Hell mini demo (C, SDL2) with quadtree & object pooling
+// Optional audio: define USE_MIXER and link SDL2_mixer
 //
-// Compile examples:
-//  (no audio)
-//  gcc main.c -IC:/msys64/mingw64/include/SDL2 -LC:/msys64/mingw64/lib -lmingw32 -lSDL2main -lSDL2 -o bullethell.exe
+// Build (Windows/MSYS2 mingw64, Linux, macOS) with CMake from the repo root:
+//  (no audio)    cmake -B build && cmake --build build
+//  (with audio)  cmake -B build -DUSE_MIXER=ON && cmake --build build
 //
-//  (with audio)
-//  gcc main.c -DUSE_MIXER -IC:/msys64/mingw64/include/SDL2 -LC:/msys64/mingw64/lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -o bullethell.exe
+// Without CMake (pkg-config; -lm is required on Linux):
+//  gcc bullethell.c $(pkg-config --cflags --libs sdl2) -lm -o bullethell
+//  gcc bullethell.c -DUSE_MIXER $(pkg-config --cflags --libs sdl2 SDL2_mixer) -lm -o bullethell
+//
+// On Windows, put SDL2.dll (and SDL2_mixer.dll for audio) next to the exe. See README.md.
 
 #include <SDL.h>
 #ifdef USE_MIXER
@@ -503,6 +506,10 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     SDL_Renderer* ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED /*| SDL_RENDERER_PRESENTVSYNC*/);
+    if (!ren) {
+        SDL_Log("Accelerated renderer unavailable (%s); falling back to software renderer.", SDL_GetError());
+        ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_SOFTWARE);
+    }
     if (!ren) {
         fprintf(stderr, "SDL_CreateRenderer: %s\n", SDL_GetError());
         SDL_DestroyWindow(win);

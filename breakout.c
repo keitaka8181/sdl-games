@@ -1,7 +1,9 @@
-// main.c -- Simple Breakout / Block Breaker using SDL2 (C)
-// Compile (MSYS2 mingw64):
-// gcc main.c -IC:/msys64/mingw64/include/SDL2 -LC:/msys64/mingw64/lib -lmingw32 -lSDL2main -lSDL2 -o main.exe
-// Don't forget to copy SDL2.dll from C:/msys64/mingw64/bin to the exe folder.
+// breakout.c -- Simple Breakout / Block Breaker using SDL2 (C)
+// Build (Windows/MSYS2 mingw64, Linux, macOS) with CMake from the repo root:
+//   cmake -B build && cmake --build build
+// Without CMake (pkg-config):
+//   gcc breakout.c $(pkg-config --cflags --libs sdl2) -o breakout
+// On Windows, put SDL2.dll next to the exe. See README.md for details.
 
 #include <SDL.h>
 #include <stdio.h>
@@ -132,6 +134,10 @@ int main(int argc, char *argv[]) {
     }
 
     SDL_Renderer *ren = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (!ren) {
+        SDL_Log("Accelerated renderer unavailable (%s); falling back to software renderer.", SDL_GetError());
+        ren = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    }
     if (!ren) {
         fprintf(stderr, "SDL_CreateRenderer Error: %s\n", SDL_GetError());
         SDL_DestroyWindow(window);
